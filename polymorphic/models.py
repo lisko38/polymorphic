@@ -204,12 +204,12 @@ class PolymorphicModel(with_metaclass(PolymorphicModelBase, models.Model)):
                 if "ptr" in accessor_name:
                     accessAttr = accessor_name + "_id"
                 attr = objects.get(pk=getattr(self, accessAttr))
-                return attr 
+                return attr
 
             return accessor_function
 
-        from pprint import pprint
         subclasses_and_superclasses_accessors = self._get_inheritance_relation_fields_and_models()
+
         for name, model in subclasses_and_superclasses_accessors.items():
             # Here be dragons.
             orig_accessor = getattr(self.__class__, name, None)
@@ -217,8 +217,6 @@ class PolymorphicModel(with_metaclass(PolymorphicModelBase, models.Model)):
                 type(orig_accessor),
                 (ReverseOneToOneDescriptor, ForwardManyToOneDescriptor),
             ):
-                from pprint import pprint
-                pprint(['************* set accessor',self.__class__,name, property(create_accessor_function_for_model(model, name))])
                 setattr(
                     self.__class__,
                     name,
